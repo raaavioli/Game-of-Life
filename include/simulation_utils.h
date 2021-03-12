@@ -3,11 +3,18 @@
 
 #include <stdint.h>
 #include <vector>
-#include <set>
+#include <map>
 #include <iostream>
 
 struct Cell {
-	uint32_t y, x;
+	int32_t y, x;
+};
+
+struct Dimension {
+	int32_t x_min = 0, 
+					x_max = 0, 
+					y_min = 0,
+					y_max = 0;
 };
 
 bool operator ==(const Cell&, const Cell&);
@@ -19,13 +26,11 @@ std::ostream& operator<<(std::ostream&, const Cell&);
 	* Performs one timestep in the Game of Life simulation
 	* That is, calculates which cells to kill/give birth to.
 	*/
-void simulate(const uint32_t width, const uint32_t height, uint32_t* population_counts,
-		std::vector<Cell>& living, std::set<Cell>& counted);
+void simulate(Dimension& bounds, std::vector<Cell>& living, std::map<Cell, int32_t>& counted);
 
 /**
 	* Writes a list of cells as a vtk file.
 	*/
-void write_vtk(const uint32_t width, const uint32_t height, 
-		const char* filename, uint32_t step, const std::vector<Cell>& living_cells);
+void write_vtk(const Dimension& bounds, const char* filename, uint32_t step, const std::vector<Cell>& living_cells);
 
 #endif //__SIMULATION_H__
