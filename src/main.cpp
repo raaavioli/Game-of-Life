@@ -10,6 +10,8 @@
 // Own includes
 #include <simulation_utils.h>
 
+#include <ctime>
+
 int main(int argc, char* argv[]) {
 	const uint32_t width = 300, height = 300;
 	
@@ -35,10 +37,26 @@ int main(int argc, char* argv[]) {
 
 	//Simulation
 	uint32_t cycle = 1;
+
+	std::clock_t vtk_total;
+	vtk_total -= vtk_total;
+	std::clock_t simulate_total;
+	simulate_total -= simulate_total;	
 	while (true) {
+		auto t_vtk = std::clock();
 		write_vtk(width, height, "out", cycle, living_cells);	
-	
+		vtk_total += ( std::clock() - t_vtk ) * 1000000 / (double) CLOCKS_PER_SEC;
+
+		auto t_sim = std::clock();
 		simulate(width, height, population_counts, living_cells, counted_cells);
+		simulate_total += ( std::clock() - t_sim ) * 1000000 / (double) CLOCKS_PER_SEC;
+
+		std::cout << "IO cycles per sec: " 
+			<< vtk_total / (double) cycle 
+			<< "microseconds, SIM per cycle: " 
+			<< simulate_total / (double) cycle << "microseconds" <<std::endl;
+		std::cout << "Living cells: " << living_cells.size() << std::endl;
+
 		cycle++;
 	}
 

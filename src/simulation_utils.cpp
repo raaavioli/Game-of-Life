@@ -39,6 +39,7 @@ void simulate(uint32_t width, uint32_t height, uint32_t* population_counts,
 		population_counts[(c.y + 1) * width + (c.x - 1)]++;
 		population_counts[(c.y + 1) * width + (c.x    )]++;
 		population_counts[(c.y + 1) * width + (c.x + 1)]++;
+		
 		counted_cells.insert({c.y - 1, c.x - 1});
 		counted_cells.insert({c.y - 1, c.x    });
 		counted_cells.insert({c.y - 1, c.x + 1});
@@ -58,7 +59,9 @@ void simulate(uint32_t width, uint32_t height, uint32_t* population_counts,
 		if (population_counts[c.y * width + c.x] == 3 || 
 				population_counts[c.y * width + c.x] == 4 && 
 				std::find(living_cells.begin(), living_cells.end(), c) != living_cells.end()) {
-			new_living_cells.push_back(c);		
+			// Only add cell if it wouldn't contribute to out of bounds reads next iteration.
+			if (c.x > 0 && c.x < width - 1 && c.y > 0 && c.y < height - 1)
+				new_living_cells.push_back(c);		
 		}
 	}
 
@@ -79,7 +82,7 @@ void write_vtk(uint32_t width, uint32_t height, const char* filename, uint32_t c
 	cc << cycle;
 	std::string filepath = "data/" + std::string(filename) + "_" + cc.str() + ".vtk";
 	std::ofstream file (filepath.c_str());
-	std::cout << "Writing file: " << filepath << std::endl;
+	//std::cout << "Writing file: " << filepath << std::endl;
 	
 	file << "# vtk DataFile Version 2.0" << std::endl;
 	file << "Game of Life" << std::endl;
