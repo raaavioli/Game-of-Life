@@ -13,10 +13,11 @@
 #include <time.h>
 
 int main(int argc, char* argv[]) {	
-	Dimension bounds = {.x_min = 0, .x_max = 11, .y_min = 0, .y_max = 2};
+	Dimension bounds = {.x_min = -30, .x_max = 30, .y_min = -30, .y_max = 30};
+	//Dimension bounds = {.x_min = 0, .x_max = 11, .y_min = 0, .y_max = 12};
 	std::vector<Cell> living_cells;
 
-	living_cells.push_back({0, 2});
+/*  living_cells.push_back({0, 2});
 	living_cells.push_back({1, 2});
 	living_cells.push_back({1, 0});
 	living_cells.push_back({2, 2});
@@ -39,14 +40,15 @@ int main(int argc, char* argv[]) {
 	living_cells.push_back({11, 8});
 	living_cells.push_back({11, 10});
 	living_cells.push_back({12, 8});
+*/
 //  Random cells 
-//	 srand(time(0));
-//	for (int y = -30; y < 30; y++) {
-//		for (int x = -30; x < 30; x++) {
-//			if(rand() % 3 == 0)
-//				living_cells.push_back({y, x});
-//		}
-//	}
+	srand(time(0));
+	for (int y = -30; y < 30; y++) {
+		for (int x = -30; x < 30; x++) {
+			if(rand() % 3 == 0)
+				living_cells.push_back({y, x});
+		}
+	}
 
 	// Dense vector with counted cells (reached from any living cell)
 	std::map<Cell, int32_t> counted_cells;
@@ -60,7 +62,7 @@ int main(int argc, char* argv[]) {
 	simulate_total -= simulate_total;	
 	while (true) {	
 		auto t_vtk = std::clock();
-			write_vtk(bounds, "out", cycle, living_cells);	
+			write_vtk(bounds, "random", cycle, living_cells);	
 		vtk_total += ( std::clock() - t_vtk ) * 1000000 / (double) CLOCKS_PER_SEC;
 
 

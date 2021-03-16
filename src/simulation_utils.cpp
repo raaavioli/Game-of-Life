@@ -90,10 +90,10 @@ void write_vtk(const Dimension& bounds, const char* filename, uint32_t cycle, co
 	
 	// Adjust bounds appropriately
 	Dimension adjusted_bounds;
-	adjusted_bounds.x_min = bounds.x_min - 20 - (20 + bounds.x_min % 20); 
-	adjusted_bounds.x_max = bounds.x_max + 20 + (20 - bounds.x_max % 20); 
-	adjusted_bounds.y_min = bounds.y_min - 20 - (20 + bounds.y_min % 20); 
-	adjusted_bounds.y_max = bounds.y_max + 20 + (20 - bounds.y_max % 20); 
+	adjusted_bounds.x_min = bounds.x_min - 10; //- //(20 + bounds.x_min % 20); 
+	adjusted_bounds.x_max = bounds.x_max + 10; //+ //(20 - bounds.x_max % 20); 
+	adjusted_bounds.y_min = bounds.y_min - 10; //- //(20 + bounds.y_min % 20); 
+	adjusted_bounds.y_max = bounds.y_max + 10; //+ //(20 - bounds.y_max % 20); 
 
 	// Width/height (including edge values)
 	int32_t width = 1 + adjusted_bounds.x_max - adjusted_bounds.x_min;
@@ -104,7 +104,10 @@ void write_vtk(const Dimension& bounds, const char* filename, uint32_t cycle, co
   file << "BINARY" << std::endl;
   file << "DATASET STRUCTURED_POINTS" << std::endl;
   file << "DIMENSIONS " << width << " " << height << " " << 1 << std::endl;
-  file << "ORIGIN " 		<< -width / (double) 2 << " " << -height / (double) 2 << " " << 0.0 << std::endl;
+  file << "ORIGIN " 		
+		<< adjusted_bounds.x_max - width / (double) 2 << " " 
+		<< adjusted_bounds.y_max - height / (double) 2 << " " 
+		<< 0.0 << std::endl;
   file << "SPACING "		<< 1.0 << " " << 1.0 << " " << 1.0 << std::endl;
   file << "POINT_DATA " << width * height << std::endl;
   file << "SCALARS cells float" << std::endl;
